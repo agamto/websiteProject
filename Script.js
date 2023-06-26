@@ -117,7 +117,10 @@ function send_form(event)
     const FormData = localStorage.getItem("SaveForm.json");
     const Jason_data = JSON.parse(FormData);
     Jason_data[document.getElementById("mission-name").value] = data;
-    const updatedJsonData = JSON.stringify(Jason_data);
+    const keyValueArray = Object.entries(Jason_data);
+    keyValueArray.sort((a, b) => importanceRunking[b[1].importance]-importanceRunking[a[1].importance] );
+    console.log(JSON.stringify(Object.fromEntries(keyValueArray)));
+    const updatedJsonData = JSON.stringify(Object.fromEntries(keyValueArray));
     localStorage.setItem("SaveForm.json",updatedJsonData);
     let table = document.getElementById("mission-list");
     let placeForInsert = 0;
