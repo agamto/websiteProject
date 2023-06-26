@@ -1,0 +1,265 @@
+body {
+  font-family: Arial, sans-serif;
+  direction: rtl; /* Set right-to-left direction */
+}
+
+h1 {
+  text-align: center;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: right; /* Align text to the right */
+}
+
+.button-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.mission-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+}
+
+.mission-table th,
+.mission-table td {
+  padding: 10px;
+  text-align: right; /* Align text to the right */
+  border-bottom: 1px solid #ddd;
+}
+
+.mission-table th {
+  background-color: #f2f2f2;
+}
+
+.completed td {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.notes {
+  font-style: italic;
+}
+
+.exclamation-mark {
+  color: black;
+}
+
+.important .exclamation-mark {
+  color: red;
+}
+
+/* Align the table cells */
+.mission-table td {
+  vertical-align: middle;
+}
+
+/* Add borders to the table cells */
+.mission-table th,
+.mission-table td {
+  border: 1px solid #ddd;
+}
+
+/* Style the importance column */
+.mission-table td:nth-child(3) {
+  text-align: center;
+  font-weight: bold;
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+/* Style the header cells of the mission tables */
+.mission-table th:nth-child(3),
+.mission-table th:nth-child(4) {
+  text-align: center;
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+.button-container button,
+.button-container button[type="submit"],
+.button-container button[type="button"] {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 10px;
+  outline: none !important; /* Add this line to remove the black border */
+  margin-bottom: 5px; /* Add this line to add a small gap between buttons */
+  margin-top: 5px; /* Add this line to add a small gap between buttons */
+}
+
+/* Style the "Clear All Missions" and "צור משימה חדשה" buttons*/
+.button-container button,
+.button-container button[type="submit"],
+.button-container button[type="button"] {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 10px;
+  outline: none !important;
+}
+.button-container button:hover {
+  background-color: #45a049;
+  color: white;
+  border-radius: 4px;
+}
+
+.mission-table .delete-button {
+  border: 1px solid #4CAF50; /* Add this line to change the border color */
+  background-color: #4CAF50;
+  color: black;
+  padding-right: 25px; /* Increase the right padding to create a gap */
+  position: relative; /* Add this line to position the button */
+  left: -5px; /* Adjust the value to move the button to the left */
+}
+
+.mission-table .complete-button {
+  border: 1px solid #4CAF50; /* Add this line to change the border color */
+  background-color: #4CAF50;
+  color: white;
+  padding-right: 25px; /* Increase the right padding to create a gap */
+  position: relative; /* Add this line to position the button */
+  left: -5px; /* Adjust the value to move the button to the left */
+}
+
+/* Style the "מחק" and "הושלם" buttons */
+.mission-table button {
+  border: 3px solid #4CAF50; /* Add this line to change the border color */
+  background-color: #4CAF50;
+  color: white;
+  margin-right: 5px;
+  border-radius: 4px;
+}
+
+.mission-table button:hover {
+  background-color: #45a049;
+  color: white;
+  border-radius: 4px;
+}
+
+/* Style the mission creation form */
+#mission-form-container {
+  background-color: #f2f2f2;
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+#mission-form-container input[type="text"],
+#mission-form-container textarea,
+#mission-form-container select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  height: 40px; /* Set the same height for all text boxes */
+  resize: none; /* Prevent resizing by dragging */
+  box-sizing: border-box;
+}
+
+/* Style the buttons */
+#mission-form-container button,
+#mission-form-container button[type="submit"],
+#mission-form-container button[type="button"] {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  outline: none !important;
+}
+
+#mission-form-container button:hover,
+#mission-form-container button[type="submit"]:hover,
+#mission-form-container button[type="button"]:hover {
+  background-color: #45a049;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.button-container {
+  margin-bottom: 20px;
+}
+
+.mission-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mission-table th,
+.mission-table td {
+  padding: 8px;
+  text-align: center;
+}
+
+.mission-table th {
+  background-color: #f2f2f2;
+}
+
+.mission-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.mission-table tr.dragging {
+  opacity: 0.5;
+}
+
+.mission-table tr.drag-over {
+  background-color: #e0e0e0;
+}
+
+#mission-form-container {
+  margin-top: 20px;
+}
+
+#mission-form label,
+#mission-form input,
+#mission-form select,
+#mission-form textarea {
+  display: block;
+  margin-bottom: 10px;
+}
+
+#mission-form button {
+  margin-top: 10px;
+}
+
+#mission-form button[type="button"] {
+  margin-left: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+.folder-row .mission-item {
+  background-color: yellow;
+}
+
+.folder-contents tr {
+  background-color: yellow;
+}
+
+.yellow {
+  background-color: yellow;
+}
+

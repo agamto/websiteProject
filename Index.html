@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>מנהל משימות</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>מנהל משימות</h1>
+
+    <div class="button-container">
+      <button id="create-mission-btn">צור משימה חדשה</button>
+      <button id="clear-missions-btn">נקה את כל המשימות</button>
+    </div>
+
+    <div id="category-buttons-container">
+      <h2>קטגוריות</h2>
+      <div id="category-buttons">
+        <!-- Category buttons will be dynamically added here -->
+      </div>
+
+      <div id="category-form-container">
+        <form id="category-form">
+          <label for="category-name">שם הקטגוריה:</label>
+          <input type="text" id="category-name" required>
+          <button  id = "createCattegoryButton">צור קטגוריה</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="mission-form-container" style="display: none;">
+      <h2>צור משימה חדשה</h2>
+
+      <form id="mission-form">
+        <label for="mission-name">שם המשימה:</label>
+        <input type="text" id="mission-name" class="mission-field" required>
+
+        <label for="mission-importance">חשיבות:</label>
+        <select id="mission-importance" class="mission-field" required>
+          <option value="High">גבוהה</option>
+          <option value="Medium">בינונית</option>
+          <option value="Low">נמוכה</option>
+        </select>
+
+        <label for="mission-notes">הערות:</label>
+        <textarea id="mission-notes" class="mission-field"></textarea>
+
+        <label for="mission-category">קטגוריה:</label>
+        <select id="mission-category" class="mission-field" required>
+          <option value="" disabled selected>בחר קטגוריה</option>
+        </select>
+
+        <button id="addMissionButton" type="submit">הוסף משימה</button>
+      </form>
+    </div>
+
+    <div>
+      <h2>משימות</h2>
+      <table class="mission-table">
+        <thead>
+          <tr>
+            <th>שם המשימה</th>
+            <th>שעת יצירה</th>
+            <th>חשיבות</th>
+            <th>הערות</th>
+            <th>קטגוריה</th>
+            <th>פעולות</th>
+          </tr>
+        </thead>
+        <tbody id="mission-list" class="draggable-rows">
+        <!-- Uncompleted mission items will be dynamically added here -->
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <h2>משימות שהושלמו</h2>
+      <table class="mission-table">
+        <thead>
+          <tr>
+            <th>שם המשימה</th>
+            <th>שעת יצירה</th>
+            <th>חשיבות</th>
+            <th>הערות</th>
+            <th>קטגוריה</th>
+            <th>פעולות</th>
+          </tr>
+        </thead>
+        <tbody id="completed-mission-list" class="draggable-rows">
+        <!-- Completed mission items will be dynamically added here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
