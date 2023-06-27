@@ -98,9 +98,17 @@ function resetTableBody() {
 function send_form(event)
 {
   event.preventDefault();
+  
   if(!( document.getElementById("mission-category").value === '' ||document.getElementById("mission-name").value === '' ))
   {
+   const FormData = localStorage.getItem("SaveForm.json");
+   const Jason_data = JSON.parse(FormData);
    let name= document.getElementById("mission-name").value;
+   if(Jason_data.hasOwnProperty(name))
+   {
+    alert("task already exist in current file");
+    return;
+   }
    let imprtence= document.getElementById("mission-importance").value;
    let notes= document.getElementById("mission-notes").value;
    let missionCattegory= document.getElementById("mission-category").value;
@@ -114,12 +122,10 @@ function send_form(event)
       missionCategory: missionCattegory,
       completed:false
     }
-    const FormData = localStorage.getItem("SaveForm.json");
-    const Jason_data = JSON.parse(FormData);
+
     Jason_data[document.getElementById("mission-name").value] = data;
     const keyValueArray = Object.entries(Jason_data);
     keyValueArray.sort((a, b) => importanceRunking[b[1].importance]-importanceRunking[a[1].importance] );
-    console.log(JSON.stringify(Object.fromEntries(keyValueArray)));
     const updatedJsonData = JSON.stringify(Object.fromEntries(keyValueArray));
     localStorage.setItem("SaveForm.json",updatedJsonData);
     let table = document.getElementById("mission-list");
