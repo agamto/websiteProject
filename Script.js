@@ -265,8 +265,15 @@ function deleteRow(event)
     let needToRemove = current_row.childNodes[0].textContent;
     let localget = localStorage.getItem("SaveForm.json");
     var local_text_json = JSON.parse(localget);
-    delete local_text_json[needToRemove];
-    
+    let keys = Object.keys(local_text_json);
+    for(let  i =0 ;i  <keys.length;i++)
+    {
+      
+      if(local_text_json[keys[i]]["name"] === needToRemove)
+      {
+        delete local_text_json[keys[i]];
+      }
+    }
     localStorage.setItem("SaveForm.json",JSON.stringify(local_text_json));
     table_to_delete.removeChild(current_row);
 }
