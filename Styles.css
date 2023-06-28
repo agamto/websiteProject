@@ -1,3 +1,4 @@
+*{box-sizing: border-box;}
 body {
   font-family: Arial, sans-serif;
   direction: rtl; /* Set right-to-left direction */
@@ -148,7 +149,52 @@ h1 {
   color: white;
   border-radius: 4px;
 }
-
+/*style for the cattegory creation form*/
+#category-form-container {
+  background-color: #f2f2f2;
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  width: 100%;
+  display: inline-block;
+}
+#category-form-container input[type = "text"],
+#category-form-container textarea,
+#category-form-container select{
+  width: 20%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  height: 40px; /* Set the same height for all text boxes */
+  resize: none; /* Prevent resizing by dragging */
+  box-sizing: border-box;
+}
+#category-form-container button
+{
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  outline: none ;
+}
+#category-form-container button:hover
+{
+  background-color: #45a049;
+}
+/*pop up create category*/
+.category-add
+{
+  display: none;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+}
 /* Style the mission creation form */
 #mission-form-container {
   background-color: #f2f2f2;
@@ -191,7 +237,7 @@ h1 {
 }
 
 .container {
-  max-width: 800px;
+  max-width:  1000px ;
   margin: 0 auto;
   padding: 20px;
 }
@@ -226,6 +272,22 @@ h1 {
 .mission-table tr.drag-over {
   background-color: #e0e0e0;
 }
+.category-table
+{
+  float: left;
+    width: 50%;
+    border-collapse: collapse;
+}
+.category-table th,
+.category-table  td
+{
+  padding: 8px;
+  text-align: center;
+}
+.category-table th
+{
+  background-color: white;
+}
 
 #mission-form-container {
   margin-top: 20px;
@@ -258,8 +320,3 @@ h1 {
 .folder-contents tr {
   background-color: yellow;
 }
-
-.yellow {
-  background-color: yellow;
-}
-

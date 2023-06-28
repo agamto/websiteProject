@@ -23,6 +23,7 @@ function create_file_if_not_exist()
       {
           categories.add(key);
           add_category_to_list(key);
+          add_row_to_cattegories_table(key);
       });
     const keys_for_Save = Object.keys(Save_data_str);
     keys_for_Save.forEach(key =>
@@ -30,6 +31,59 @@ function create_file_if_not_exist()
         add_from_save(Save_data_str[key]);
       });
   }
+}
+function add_row_to_cattegories_table(value)
+{
+var tbody = document.getElementById('category-table-body-id');
+let new_row = tbody.insertRow(-1);
+
+let buttonCell = new_row.insertCell(0);
+let button = document.createElement("button");
+button.id = value;
+button.textContent = "-";
+buttonCell.appendChild(button);
+let textCell = new_row.insertCell(1);
+textCell.id = value;
+textCell.addEventListener("click",create_table_of_filtered_users);
+let textContent = document.createTextNode(value);
+textCell.appendChild(textContent);
+
+}
+//create  a table of filtered users
+function create_table_of_filtered_users()
+{
+    let list_Of_Rows_Indexes = [];
+    var UnfillteredMissionTable = document.getElementById('mission-list');
+    let  i;
+    for(i =3; i < UnfillteredMissionTable.childNodes.length;i++)
+    {
+      if(UnfillteredMissionTable.childNodes[i].childNodes[4].textContent === this.id)
+      {
+        list_Of_Rows_Indexes.push(i);
+      }
+    }
+    if(list_Of_Rows_Indexes.length === 0)
+    {
+      alert("אין משימות בקטגוריה זו");
+      return;
+    }
+    var filtered_Mission_Table = document.getElementById('filtered-mission-table');
+    document.getElementById("filltered-mission-table-container").style.display ="inline-block";
+    clear_Table(filtered_Mission_Table);
+    for(i = 0; i <list_Of_Rows_Indexes.length;i++)
+    {
+      filtered_Mission_Table.appendChild(UnfillteredMissionTable.childNodes[list_Of_Rows_Indexes[i]].cloneNode(true));
+    }
+}
+//clear the table from nodes
+function clear_Table(table)
+{
+  let i;
+  for(i =3; i < table.childNodes.length;i++)
+  {
+    table.removeChild(table.childNodes[i]);
+  }
+
 }
 //add from save
 function add_from_save(value) {
@@ -144,6 +198,7 @@ function send_form(event)
       placeForInsert = index-2;
     }
     let newRow = table.insertRow(placeForInsert);
+    newRow.classList.add('draggable-row');
     let  i;
     let keys = Object.keys(data);
     for(i = 0; i <keys.length-1;i++)
@@ -168,6 +223,11 @@ function send_form(event)
       newCell.appendChild(editButton);
       newCell.appendChild(doneButton);
       newCell.appendChild(deleteButton);
+      const  Btext = document.getElementById('create-mission-btn');
+      Btext.textContent =  "צור משימה חדשה";
+      var formSend = document.getElementById('mission-form-container');
+      formSend.style.display = 'none';    
+      document.getElementById('mission-form').reset();
     }
     catch(err)
     {
@@ -309,6 +369,8 @@ function formatDate(dateTime) {
 //open and close the form button function
 function OpenAndCloseForm()
 {
+  if(document.getElementById('open_cattegories_button').textContent === "צור קטגוריה")
+  {
   const  Btext = document.getElementById('create-mission-btn').textContent;
   if(Btext === "צור משימה חדשה")
   {
@@ -322,7 +384,11 @@ function OpenAndCloseForm()
     document.getElementById("mission-form-container").style.display = "none";
     document.getElementById('create-mission-btn').textContent = 'צור משימה חדשה';
   }
-  
+  }
+  else
+  {
+    alert("אי אפשר לפתוח שתי טפסים במקביל.");
+  }
 }
 // add a category function
 function createCategory()
@@ -338,16 +404,69 @@ function createCategory()
     data[cattegoryText] = cattegoryText;
     const updatedJsonData = JSON.stringify(data);
     localStorage.setItem("categories.json",updatedJsonData);
+    add_row_to_cattegories_table(cattegoryText);
   }
+  else if(cattegoryText === '')
+  {
+    alert("אי אפשר לשים קטגוריה ריקה");
+  }
+  else
+  {
+    alert("כבר קיימת קטגוריה זו");
+  }
+}
+//open create cattegory form
+function open_cattegories_form()
+{
+  if(document.getElementById('create-mission-btn').textContent === "צור משימה חדשה")
+  {
+  var button = document.getElementById('open_cattegories_button');
+  console.button
+  if(button.textContent === "צור קטגוריה")
+  {
+  document.getElementById('category-form-container').style.display ="inline-block";
+  button.textContent = "סגור טופס";
+  }
+  else
+  {
+  document.getElementById('category-form-container').style.display ="none";
+  button.textContent = "צור קטגוריה";
+  }
+  }
+  else
+  {
+    alert("אי אפשר לפתוח את שתי הטפסים במקביל.");
+  }
+}
+function close_add_cattegories_form()
+{
+  document.getElementById('add_cattegory_form').style.display = "none";
+}
+//close create cattegory form
+function open_create_categories()
+{
+  document.getElementById('add_cattegory_form').style.display = "inline-block";
+}
+//closing filltered mission table
+function close_filltered_table()
+{
+  var filtered_Mission_Table = document.getElementById('filtered-mission-table');
+  document.getElementById("filltered-mission-table-container").style.display ="none";
+  clear_Table(filtered_Mission_Table);
 }
 //creates the listeners
 function addListeners()
 {
+    document.getElementById('close_filtered_mission_table').addEventListener("click",close_filltered_table);
+    document.getElementById('close-cattegory-form').addEventListener("click",close_add_cattegories_form);
+    document.getElementById('open_cattegories_button').addEventListener("click",open_cattegories_form);
+    document.getElementById('open-add-pop-up').addEventListener("click",open_create_categories);
     document.getElementById('create-mission-btn').addEventListener("click",OpenAndCloseForm);
     document.getElementById('createCattegoryButton').addEventListener("click",createCategory);
     document.getElementById('addMissionButton').addEventListener("click",send_form);
     document.getElementById('clear-missions-btn').addEventListener("click",resetTableBody);
 }
+
 // initialize the buttons and js file
 function init() {
  create_file_if_not_exist();

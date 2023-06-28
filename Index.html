@@ -11,23 +11,55 @@
     <div class="button-container">
       <button id="create-mission-btn">צור משימה חדשה</button>
       <button id="clear-missions-btn">נקה את כל המשימות</button>
+      <button  id = "open_cattegories_button">צור קטגוריה</button>
     </div>
 
-    <div id="category-buttons-container">
-      <h2>קטגוריות</h2>
-      <div id="category-buttons">
-        <!-- Category buttons will be dynamically added here -->
-      </div>
-
-      <div id="category-form-container">
-        <form id="category-form">
+    <div>
+      <div id="category-form-container" style="display: none;">
+        <div id="category-form">
+        <div class="category-add" id="add_cattegory_form">
+          <button id="close-cattegory-form">X</button>
           <label for="category-name">שם הקטגוריה:</label>
-          <input type="text" id="category-name" required>
-          <button  id = "createCattegoryButton">צור קטגוריה</button>
-        </form>
+          <input type="text" id="category-name">
+          <button id = "createCattegoryButton">צור קטגוריה</button>
+        </div>
+        <div style="display: inline-block; float: left;">
+        <table class="category-table">
+          <thead>
+            <tr>
+            <th><button id="open-add-pop-up">+</button></th>
+            <th> קטגוריה</th>
+            </tr>
+          </thead>
+          <tbody id ="category-table-body-id">
+            
+              <!-- putting categories in the beggining-->
+            
+          </tbody>
+        </table>
+        </div>
+        <div  style="float: right;">
+          <div id="filltered-mission-table-container"style = "display: none;">
+            <button id = "close_filtered_mission_table">X</button>
+            <table  class="mission-table" >
+              <thead>
+                <tr>
+                  <th>שם המשימה</th>
+                  <th>שעת יצירה</th>
+                  <th>חשיבות</th>
+                  <th>הערות</th>
+                  <th>קטגוריה</th>
+                  <th>פעולות</th>
+                </tr>
+              </thead>
+              <tbody id="filtered-mission-table" class="draggable-rows">
+          <!-- Completed mission items will be dynamically added here -->
+            </tbody>
+           </table>
+          </div>
+         </div>
+        </div>
       </div>
-    </div>
-
     <div id="mission-form-container" style="display: none;">
       <h2>צור משימה חדשה</h2>
 
