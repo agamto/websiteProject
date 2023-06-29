@@ -50,6 +50,7 @@ let buttonCell = new_row.insertCell(0);
 let button = document.createElement("button");
 button.id = value;
 button.textContent = "-";
+button.addEventListener("click",deleteCattegory);
 buttonCell.appendChild(button);
 let textCell = new_row.insertCell(1);
 textCell.id = value;
@@ -334,6 +335,49 @@ function editRow(event)
   SaveButton.addEventListener("click",SaveEdit)
   document.getElementById(event.target.id).parentNode.appendChild(SaveButton);
 }
+// checks if a cattegory is exist in the current save file
+function find_Cattegory(cattegory)
+{
+  let localget = localStorage.getItem("SaveForm.json");
+  var local_text_json = JSON.parse(localget);
+  let keys = Object.keys(local_text_json);
+  
+  for(let  i =0 ;i  <keys.length;i++)
+  {
+    if(local_text_json[keys[i]]["missionCategory"]  === cattegory)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+//delete the current cattegory
+function deleteCattegory(event)
+{
+  
+  let  needToRemove = event.target.id;
+  if(find_Cattegory(needToRemove))
+  {
+    alert("יש משימות בקטגוריה זו");
+    return;
+  }
+  let localget = localStorage.getItem("categories.json");
+  var local_text_json = JSON.parse(localget);
+  let keys = Object.keys(local_text_json);
+  for(let  i =0 ;i  <keys.length;i++)
+  {
+    
+    if(local_text_json[keys[i]] === needToRemove)
+    {
+      delete local_text_json[keys[i]];
+    }
+  }
+  localStorage.setItem("categories.json",JSON.stringify(local_text_json));
+  let current_row = document.getElementById(event.target.id).parentNode.parentNode;
+  let table_to_delete = document.getElementById(event.target.id).parentNode.parentNode.parentNode;
+  table_to_delete.removeChild(current_row);
+  categories.delete(needToRemove);
+}
 //delete the current row
 function deleteRow(event)
 {
@@ -494,5 +538,4 @@ function init() {
  addListeners();
  
 }
-
 init();
