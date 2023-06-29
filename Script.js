@@ -379,6 +379,12 @@ function deleteCattegory(event)
   let table_to_delete = document.getElementById(event.target.id).parentNode.parentNode.parentNode;
   table_to_delete.removeChild(current_row);
   categories.delete(needToRemove);
+  var cattegoryList = document.getElementById('mission-category');
+  for(let i = 0; i < cattegoryList.childNodes.length;i++)
+  {
+    if(cattegoryList.childNodes[i].textContent === needToRemove)
+      cattegoryList.removeChild(cattegoryList.childNodes[i]);
+  }
 }
 //delete the current row
 function deleteRow(event)
