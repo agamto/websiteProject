@@ -1,4 +1,4 @@
-*{box-sizing: border-box;}
+
 body {
   font-family: Arial, sans-serif;
   direction: rtl; /* Set right-to-left direction */
@@ -56,7 +56,7 @@ h1 {
 
 /* Align the table cells */
 .mission-table td {
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 /* Add borders to the table cells */

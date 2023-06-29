@@ -15,8 +15,6 @@ function create_file_if_not_exist()
   else
   {
     const cattegories_data = (localStorage.getItem(categories_File_Path));
-    const Save_data = localStorage.getItem(Save_File_Path);
-    const Save_data_str = JSON.parse(Save_data);
     const cattegories_data_str = JSON.parse(cattegories_data);
     const keys = Object.keys(cattegories_data_str);
     keys.forEach(key =>
@@ -25,12 +23,23 @@ function create_file_if_not_exist()
           add_category_to_list(key);
           add_row_to_cattegories_table(key);
       });
-    const keys_for_Save = Object.keys(Save_data_str);
-    keys_for_Save.forEach(key =>
-      {
-        add_from_save(Save_data_str[key]);
-      });
+      updateFromSave();
   }
+}
+//updates the tables from saved data
+function updateFromSave()
+{
+  clear_Table(document.getElementById("mission-list"));
+  clear_Table(document.getElementById("completed-mission-list"));
+  const Save_File_Path = "SaveForm.json";
+  const Save_data = localStorage.getItem(Save_File_Path);
+  const Save_data_str = JSON.parse(Save_data);
+  const keys_for_Save = Object.keys(Save_data_str);
+  keys_for_Save.forEach(key =>
+    {
+      add_from_save(Save_data_str[key]);
+    });
+    
 }
 function add_row_to_cattegories_table(value)
 {
@@ -73,20 +82,26 @@ function create_table_of_filtered_users()
     for(i = 0; i <list_Of_Rows_Indexes.length;i++)
     {
       filtered_Mission_Table.appendChild(UnfillteredMissionTable.childNodes[list_Of_Rows_Indexes[i]].cloneNode(true));
+      filtered_Mission_Table.childNodes[i+3].childNodes[5].childNodes[0].addEventListener("click",editRow);
+      filtered_Mission_Table.childNodes[i+3].childNodes[5].childNodes[1].addEventListener("click",moove_to_done);
+      filtered_Mission_Table.childNodes[i+3].childNodes[5].childNodes[2].addEventListener("click",deleteRow);
     }
+
 }
 //clear the table from nodes
 function clear_Table(table)
 {
-  let i;
-  for(i =3; i < table.childNodes.length;i++)
+  while(table.rows.length > 0)
   {
-    table.removeChild(table.childNodes[i]);
+    table.deleteRow(0);
   }
 
 }
 //add from save
 function add_from_save(value) {
+  
+
+  
   let table;
   if(value["completed"] === false)
   {
@@ -300,6 +315,8 @@ function SaveEdit(event)
 
   const updatedJsonData = JSON.stringify(Jason_data);
   localStorage.setItem("SaveForm.json",updatedJsonData);
+  updateFromSave();
+
 }
 // make the rows editable
 function editRow(event)
@@ -336,6 +353,8 @@ function deleteRow(event)
     }
     localStorage.setItem("SaveForm.json",JSON.stringify(local_text_json));
     table_to_delete.removeChild(current_row);
+    updateFromSave();
+
 }
 //moove the row to the  done pile
 function moove_to_done(event)
@@ -348,6 +367,8 @@ function moove_to_done(event)
   jason_data[event.target.id]["completed"] = true;
   let updatedJsonData = JSON.stringify(jason_data);
   localStorage.setItem("SaveForm.json",updatedJsonData);
+  updateFromSave();
+
 }
 //add a category to list
 function add_category_to_list(cattegory)
