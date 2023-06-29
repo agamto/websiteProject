@@ -431,6 +431,14 @@ function moove_to_done(event)
 {
   let current_row = document.getElementById(event.target.id).parentNode.parentNode;
   let dest_table = document.getElementById("completed-mission-list");
+  if(current_row.parentNode.id === "filtered-mission-table")
+  {
+    let fillteredDoneTable = document.getElementById("filtered-mission-table-not-done");
+      fillteredDoneTable.appendChild(current_row.cloneNode(true));
+      let buttonCell = fillteredDoneTable.childNodes[fillteredDoneTable.childNodes.length-1].childNodes[5];
+      buttonCell.childNodes[0].addEventListener("click",editRow);
+      buttonCell.childNodes[2].addEventListener("click",deleteRow);
+  }
   dest_table.appendChild(current_row);
   let jsonOfSave = localStorage.getItem("SaveForm.json");
   let jason_data = JSON.parse(jsonOfSave);
