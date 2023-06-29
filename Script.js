@@ -153,10 +153,12 @@ function add_from_save(value) {
 }
 //reset Tables
 function resetTableBody() {
-  var tableBody = document.querySelector('tbody');
-  let  completed_table = document.getElementById("completed-mission-list");
-  while (tableBody.firstChild) {
-    tableBody.removeChild(tableBody.firstChild);
+  
+  let  completed_table = document.getElementById("mission-list");
+  let uncompleted_table = document.getElementById("completed-mission-list");
+  while(uncompleted_table.firstChild)
+  {
+    uncompleted_table.removeChild(uncompleted_table.firstChild);
   }
   while(completed_table.firstChild)
   {
