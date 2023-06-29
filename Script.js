@@ -1,5 +1,5 @@
 let categories = new Set(); //hashset to save  the cattegories
-const importanceRunking = {"High":3,"Medium":2,"Low":1};
+const importanceRunking = {"גבוהה":3,"בינונית":2,"נמוכה":1};
 //check if save file is exist and if not to create a save file
 function create_file_if_not_exist()
 {
@@ -63,7 +63,9 @@ textCell.appendChild(textContent);
 function create_table_of_filtered_users()
 {
     let list_Of_Rows_Indexes = [];
+    let list_Of_Rows_Indexes_for_not_done = [];
     var UnfillteredMissionTable = document.getElementById('mission-list');
+    var UnfillteredMissionTable_For_Not_Done = document.getElementById('completed-mission-list');
     let  i;
     for(i =3; i < UnfillteredMissionTable.childNodes.length;i++)
     {
@@ -72,7 +74,14 @@ function create_table_of_filtered_users()
         list_Of_Rows_Indexes.push(i);
       }
     }
-    if(list_Of_Rows_Indexes.length === 0)
+    for(i = 3; i <UnfillteredMissionTable_For_Not_Done.childNodes.length;i++)
+    {
+      if(UnfillteredMissionTable_For_Not_Done.childNodes[i].childNodes[4].textContent === this.id)
+      {
+        list_Of_Rows_Indexes_for_not_done.push(i);
+      }
+    }
+    if(list_Of_Rows_Indexes.length === 0 && list_Of_Rows_Indexes_for_not_done.length === 0)
     {
       alert("אין משימות בקטגוריה זו");
       return;
@@ -86,6 +95,15 @@ function create_table_of_filtered_users()
       filtered_Mission_Table.childNodes[i+3].childNodes[5].childNodes[0].addEventListener("click",editRow);
       filtered_Mission_Table.childNodes[i+3].childNodes[5].childNodes[1].addEventListener("click",moove_to_done);
       filtered_Mission_Table.childNodes[i+3].childNodes[5].childNodes[2].addEventListener("click",deleteRow);
+    }
+    var filtered_Mission_Table_not_done = document.getElementById('filtered-mission-table-not-done');
+    clear_Table(filtered_Mission_Table_not_done);
+    for(i = 0; i <list_Of_Rows_Indexes_for_not_done.length;i++)
+    {
+      filtered_Mission_Table_not_done.appendChild(UnfillteredMissionTable_For_Not_Done.childNodes[list_Of_Rows_Indexes_for_not_done[i]].cloneNode(true));
+      filtered_Mission_Table_not_done.childNodes[i+3].childNodes[5].childNodes[0].addEventListener("click",editRow);
+      filtered_Mission_Table_not_done.childNodes[i+3].childNodes[5].childNodes[1].addEventListener("click",moove_to_done);
+      filtered_Mission_Table_not_done.childNodes[i+3].childNodes[5].childNodes[2].addEventListener("click",deleteRow);
     }
 
 }
@@ -272,7 +290,7 @@ function SaveEdit(event)
   else
     {
       if(!importanceRunking.hasOwnProperty(current_row.childNodes[2].textContent))
-    alert("need to choose beetween: High,Medium,Low");
+    alert("צריך לבחור בין:גבוהה,נמוכה,בינונית");
     else{
       alert("category not in list");
     }
@@ -420,7 +438,6 @@ function moove_to_done(event)
   let updatedJsonData = JSON.stringify(jason_data);
   localStorage.setItem("SaveForm.json",updatedJsonData);
   updateFromSave();
-
 }
 //add a category to list
 function add_category_to_list(cattegory)
@@ -526,6 +543,7 @@ function close_filltered_table()
   var filtered_Mission_Table = document.getElementById('filtered-mission-table');
   document.getElementById("filltered-mission-table-container").style.display ="none";
   clear_Table(filtered_Mission_Table);
+  clear_Table(document.getElementById('filtered-mission-table-not-done'));
 }
 //creates the listeners
 function addListeners()

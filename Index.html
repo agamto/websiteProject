@@ -39,8 +39,10 @@
         </table>
         </div>
         <div  style="float: right;">
-          <div id="filltered-mission-table-container"style = "display: none;">
-            <button id = "close_filtered_mission_table">X</button>
+          <div id="filltered-mission-table-container"style = "display: none; ">
+             <button id = "close_filtered_mission_table" style="display: inline-block;">X</button>
+            <h2 style="display: inline-block; right: 50%;">טבלת משימות</h2>
+           
             <table  class="mission-table" >
               <thead>
                 <tr>
@@ -56,6 +58,22 @@
           <!-- Completed mission items will be dynamically added here -->
             </tbody>
            </table>
+           <h2>משימות שהושלמו</h2>
+           <table  class="mission-table" >
+            <thead>
+              <tr>
+                <th>שם המשימה</th>
+                <th>שעת יצירה</th>
+                <th>חשיבות</th>
+                <th>הערות</th>
+                <th>קטגוריה</th>
+                <th>פעולות</th>
+              </tr>
+            </thead>
+            <tbody id="filtered-mission-table-not-done" class="draggable-rows">
+        <!-- Completed mission items will be dynamically added here -->
+          </tbody>
+         </table>
           </div>
          </div>
         </div>
@@ -69,9 +87,9 @@
 
         <label for="mission-importance">חשיבות:</label>
         <select id="mission-importance" class="mission-field" required>
-          <option value="High">גבוהה</option>
-          <option value="Medium">בינונית</option>
-          <option value="Low">נמוכה</option>
+          <option value="גבוהה">גבוהה</option>
+          <option value="בינונית">בינונית</option>
+          <option value="נמוכה">נמוכה</option>
         </select>
 
         <label for="mission-notes">הערות:</label>
