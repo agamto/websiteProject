@@ -1,5 +1,6 @@
 let categories = new Set(); //hashset to save  the cattegories
 const importanceRunking = {"גבוהה":3,"בינונית":2,"נמוכה":1};
+let yesOrNo = false;
 //check if save file is exist and if not to create a save file
 function create_file_if_not_exist()
 {
@@ -355,34 +356,94 @@ function editRow(event)
   SaveButton.addEventListener("click",SaveEdit)
   document.getElementById(event.target.id).parentNode.appendChild(SaveButton);
 }
-// checks if a cattegory is exist in the current save file
-function find_Cattegory(cattegory)
+function waitForButtonClick()
 {
+  return new Promise(function(resolve) {
+    var button = document.getElementById("Yes_button");
+
+    function functionTrue()
+    {
+    yesOrNo = true;
+    hideAlert();
+    resolve();
+    }
+
+    button.addEventListener("click", functionTrue);
+  });
+}
+function waitForButtonClickNo()
+{
+  return new Promise(function(resolve) {
+    var button = document.getElementById("No_button");
+
+    function functionTrue()
+    {
+    yesOrNo = false;
+    hideAlert();
+    resolve();
+    }
+
+    button.addEventListener("click", functionTrue);
+  });
+}
+ function initiate_race()
+{
+  return Promise.race([waitForButtonClickNo(), waitForButtonClick()]);
+}
+// checks if a cattegory is exist in the current save file
+async function find_Cattegory(cattegory)
+{
+  let allData = [];
   let localget = localStorage.getItem("SaveForm.json");
   var local_text_json = JSON.parse(localget);
   let keys = Object.keys(local_text_json);
   let flag = false;
-  for(let  i =0 ;i  <keys.length;i++)
+  let  i;
+  for(i =0 ;i  <keys.length;i++)
   {
     if(local_text_json[keys[i]]["missionCategory"]  === cattegory)
     {
-      local_text_json[keys[i]]["missionCategory"] = "";
       flag = true;
+      break;
+    }
+  }
+  if(flag)
+  {
+    showAlert();
+    try {
+      const clickedButton = await initiate_race();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    if(yesOrNo)
+    {
+      
+      for(i =0 ;i  <keys.length;i++)
+    {
+    if(local_text_json[keys[i]]["missionCategory"]  === cattegory)
+      {
+        local_text_json[keys[i]]["missionCategory"] = "";
+        break;
+      }
+    }
     }
   }
   localStorage.setItem("SaveForm.json",JSON.stringify(local_text_json));
   updateFromSave();
   return flag;
+  
+}
+function startProcess(cattegory)
+{
+  return find_Cattegory(cattegory);
 }
 //delete the current cattegory
-function deleteCattegory(event)
+async function deleteCattegory(event)
 {
-  
   let  needToRemove = event.target.id;
-  if(find_Cattegory(needToRemove))
-  {
-    alert("יש משימות בקטגוריה זו");
-  }
+  if(await startProcess(needToRemove)&&!yesOrNo)
+  {return;}
+
   let localget = localStorage.getItem("categories.json");
   var local_text_json = JSON.parse(localget);
   let keys = Object.keys(local_text_json);
@@ -555,6 +616,26 @@ function close_filltered_table()
   clear_Table(filtered_Mission_Table);
   clear_Table(document.getElementById('filtered-mission-table-not-done'));
 }
+// Display the custom alert box
+function showAlert() {
+  var customAlert = document.getElementById("custom-alert");
+  customAlert.style.display = "block";
+
+}
+// Hide the custom alert box and re-enable interactions
+function hideAlert() {
+  var customAlert = document.getElementById("custom-alert");
+  customAlert.style.display = "none";
+
+}
+//returns the false for a callback
+function functionFalse()
+{
+    yesOrNo  = false;
+    hideAlert();
+}
+
+
 //creates the listeners
 function addListeners()
 {
