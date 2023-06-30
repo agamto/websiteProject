@@ -184,17 +184,17 @@ function add_from_save(value) {
 //reset Tables
 function resetTableBody() {
   
-  let  completed_table = document.getElementById("mission-list");
+  const FormData = localStorage.getItem("SaveForm.json");
+  const Jason_data = JSON.parse(FormData);
   let uncompleted_table = document.getElementById("completed-mission-list");
-  while(uncompleted_table.firstChild)
-  {
-    uncompleted_table.removeChild(uncompleted_table.firstChild);
+  let i;
+  for(i =3; i <uncompleted_table.childNodes.length;i++)
+  { 
+    console.log(uncompleted_table.childNodes[i]);
+    delete Jason_data[uncompleted_table.childNodes[i].childNodes[0].textContent];
+    uncompleted_table.removeChild(uncompleted_table.childNodes[i]);
   }
-  while(completed_table.firstChild)
-  {
-    completed_table.removeChild(completed_table.firstChild);
-  }
-  localStorage.setItem("SaveForm.json",JSON.stringify({}))
+  localStorage.setItem("SaveForm.json",JSON.stringify(Jason_data));
 }
 //send a form to local data
 function send_form(event)
