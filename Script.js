@@ -361,15 +361,18 @@ function find_Cattegory(cattegory)
   let localget = localStorage.getItem("SaveForm.json");
   var local_text_json = JSON.parse(localget);
   let keys = Object.keys(local_text_json);
-  
+  let flag = false;
   for(let  i =0 ;i  <keys.length;i++)
   {
     if(local_text_json[keys[i]]["missionCategory"]  === cattegory)
     {
-      return true;
+      local_text_json[keys[i]]["missionCategory"] = "";
+      flag = true;
     }
   }
-  return false;
+  localStorage.setItem("SaveForm.json",JSON.stringify(local_text_json));
+  updateFromSave();
+  return flag;
 }
 //delete the current cattegory
 function deleteCattegory(event)
@@ -379,7 +382,6 @@ function deleteCattegory(event)
   if(find_Cattegory(needToRemove))
   {
     alert("יש משימות בקטגוריה זו");
-    return;
   }
   let localget = localStorage.getItem("categories.json");
   var local_text_json = JSON.parse(localget);
