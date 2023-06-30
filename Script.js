@@ -356,6 +356,7 @@ function editRow(event)
   SaveButton.addEventListener("click",SaveEdit)
   document.getElementById(event.target.id).parentNode.appendChild(SaveButton);
 }
+//creating a promise for the yes button
 function waitForButtonClick()
 {
   return new Promise(function(resolve) {
@@ -371,6 +372,7 @@ function waitForButtonClick()
     button.addEventListener("click", functionTrue);
   });
 }
+//creating a promise for the no button
 function waitForButtonClickNo()
 {
   return new Promise(function(resolve) {
@@ -386,6 +388,7 @@ function waitForButtonClickNo()
     button.addEventListener("click", functionTrue);
   });
 }
+//start the critical race beetween button1 and button2
  function initiate_race()
 {
   return Promise.race([waitForButtonClickNo(), waitForButtonClick()]);
@@ -433,6 +436,7 @@ async function find_Cattegory(cattegory)
   return flag;
   
 }
+//starting an async function to find a cattegory and deploy an alart box if cattegory exist
 function startProcess(cattegory)
 {
   return find_Cattegory(cattegory);
