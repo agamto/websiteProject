@@ -1,6 +1,8 @@
 let categories = new Set(); //hashset to save  the cattegories
 const importanceRunking = {"גבוהה":3,"בינונית":2,"נמוכה":1};
 let yesOrNo = false;
+let draggedRow = null;
+let isDragging = false;
 //check if save file is exist and if not to create a save file
 function create_file_if_not_exist()
 {
@@ -169,6 +171,15 @@ function add_from_save(value) {
       newCell.appendChild(doneButton);
       newCell.appendChild(deleteButton);
 
+      let MooveRowCell = newRow.insertCell(6);
+      let mooveRowButton = document.createElement("button");
+      mooveRowButton.addEventListener('mousedown', onMouseDown);
+      mooveRowButton.addEventListener('mousemove', onMouseMove);
+      mooveRowButton.addEventListener('mouseup', onMouseUp);
+      mooveRowButton.textContent="≡";
+      mooveRowButton.classList.add("dragButton");
+      MooveRowCell.appendChild(mooveRowButton);
+
 }
 //reset Tables
 function resetTableBody() {
@@ -260,6 +271,14 @@ function send_form(event)
       newCell.appendChild(editButton);
       newCell.appendChild(doneButton);
       newCell.appendChild(deleteButton);
+      let MooveRowCell = newRow.insertCell(6);
+      let mooveRowButton = document.createElement("button");
+      mooveRowButton.addEventListener('mousedown', onMouseDown);
+      mooveRowButton.addEventListener('mousemove', onMouseMove);
+      mooveRowButton.addEventListener('mouseup', onMouseUp);
+      mooveRowButton.textContent="≡";
+      mooveRowButton.classList.add("dragButton");
+      MooveRowCell.appendChild(mooveRowButton);
       const  Btext = document.getElementById('create-mission-btn');
       Btext.textContent =  "צור משימה חדשה";
       var formSend = document.getElementById('mission-form-container');
@@ -638,7 +657,41 @@ function functionFalse()
     yesOrNo  = false;
     hideAlert();
 }
+function onMouseDown(event) {
+  if (event.target.classList.contains('dragButton')) {
+    draggedRow = event.target.closest('tr');
+    isDragging = true;
+  }
+}
 
+  function onMouseMove(event) {
+    if (isDragging) {
+      event.preventDefault();
+    }
+  }
+
+
+function onMouseUp(event) {
+  if (isDragging) {
+    event.preventDefault();
+    const dropTarget = event.target.closest('tr');
+    if (dropTarget && dropTarget !== draggedRow) {
+      const newRowIndex = Array.from(dropTarget.parentNode.children).indexOf(dropTarget);
+      const draggedRowIndex = Array.from(draggedRow.parentNode.children).indexOf(draggedRow);
+      if (newRowIndex > draggedRowIndex) {
+        dropTarget.parentNode.insertBefore(draggedRow, dropTarget.nextElementSibling);
+      } else {
+        dropTarget.parentNode.insertBefore(draggedRow, dropTarget);
+      }
+    }
+    resetDragState();
+  }
+}
+
+function resetDragState() {
+  draggedRow = null;
+  isDragging = false;
+}
 
 //creates the listeners
 function addListeners()

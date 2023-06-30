@@ -353,3 +353,8 @@ h1 {
   border-radius: 5px;
   cursor: pointer;
 }
+
+
+.dragButton {
+  cursor: move;
+}
