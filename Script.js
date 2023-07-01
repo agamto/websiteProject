@@ -379,7 +379,7 @@ function editRow(event)
 {
   let current_row = document.getElementById(event.target.id).parentNode.parentNode;
   let i;
-  for(i= 0; i < current_row.childNodes.length-1;i++)
+  for(i= 0; i < current_row.childNodes.length-2;i++)
   {
     current_row.childNodes[i].setAttribute("contenteditable", "true");
   }
