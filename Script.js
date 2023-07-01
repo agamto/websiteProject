@@ -3,6 +3,10 @@ const importanceRunking = {"גבוהה":3,"בינונית":2,"נמוכה":1};
 let yesOrNo = false;
 let draggedRow = null;
 let isDragging = false;
+function close_add_cattegories_form()
+{
+  document.getElementById('add_cattegory_form').style.display = "none";
+}
 //check if save file is exist and if not to create a save file
 function create_file_if_not_exist()
 {
@@ -553,8 +557,10 @@ function formatDate(dateTime) {
 //open and close the form button function
 function OpenAndCloseForm()
 {
-  if(document.getElementById('open_cattegories_button').textContent === "צור קטגוריה")
+  if(document.getElementById('open_cattegories_button').textContent !== "צור קטגוריה")
   {
+    open_cattegories_form();
+  }
   const  Btext = document.getElementById('create-mission-btn').textContent;
   if(Btext === "צור משימה חדשה")
   {
@@ -568,11 +574,8 @@ function OpenAndCloseForm()
     document.getElementById("mission-form-container").style.display = "none";
     document.getElementById('create-mission-btn').textContent = 'צור משימה חדשה';
   }
-  }
-  else
-  {
-    alert("אי אפשר לפתוח שתי טפסים במקביל.");
-  }
+  
+
 }
 // add a category function
 function createCategory()
@@ -589,6 +592,7 @@ function createCategory()
     const updatedJsonData = JSON.stringify(data);
     localStorage.setItem("categories.json",updatedJsonData);
     add_row_to_cattegories_table(cattegoryText);
+    close_add_cattegories_form();
   }
   else if(cattegoryText === '')
   {
@@ -602,30 +606,30 @@ function createCategory()
 //open create cattegory form
 function open_cattegories_form()
 {
-  if(document.getElementById('create-mission-btn').textContent === "צור משימה חדשה")
+  if(document.getElementById('create-mission-btn').textContent !== "צור משימה חדשה")
   {
+    OpenAndCloseForm();
+  }
   var button = document.getElementById('open_cattegories_button');
   console.button
   if(button.textContent === "צור קטגוריה")
   {
   document.getElementById('category-form-container').style.display ="inline-block";
   button.textContent = "סגור טופס";
+  close_add_cattegories_form();
+
   }
   else
   {
   document.getElementById('category-form-container').style.display ="none";
   button.textContent = "צור קטגוריה";
+  close_add_cattegories_form();
+
   }
-  }
-  else
-  {
-    alert("אי אפשר לפתוח את שתי הטפסים במקביל.");
-  }
+  
+
 }
-function close_add_cattegories_form()
-{
-  document.getElementById('add_cattegory_form').style.display = "none";
-}
+
 //close create cattegory form
 function open_create_categories()
 {
