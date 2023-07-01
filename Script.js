@@ -109,6 +109,9 @@ function create_table_of_filtered_users()
     {
       filtered_Mission_Table_not_done.appendChild(UnfillteredMissionTable_For_Not_Done.childNodes[list_Of_Rows_Indexes_for_not_done[i]].cloneNode(true));
       filtered_Mission_Table_not_done.childNodes[i+3].childNodes[5].childNodes[0].addEventListener("click",editRow);
+      if(filtered_Mission_Table_not_done.childNodes[i+3].childNodes[5].childNodes[1].textContent === "החזר למשימות")
+      filtered_Mission_Table_not_done.childNodes[i+3].childNodes[5].childNodes[1].addEventListener("click",moove_to_not_done);
+      else
       filtered_Mission_Table_not_done.childNodes[i+3].childNodes[5].childNodes[1].addEventListener("click",moove_to_done);
       filtered_Mission_Table_not_done.childNodes[i+3].childNodes[5].childNodes[2].addEventListener("click",deleteRow);
     }
@@ -129,6 +132,7 @@ function add_from_save(value) {
 
   
   let table;
+  let completed_flag = false;
   if(value["completed"] === false)
   {
     table = document.getElementById("mission-list");
@@ -136,6 +140,7 @@ function add_from_save(value) {
   else
   {
     table = document.getElementById("completed-mission-list");
+    completed_flag = true;
   }
   let placeForInsert = 0;
   if(table.childNodes.length != 3)
@@ -171,6 +176,11 @@ function add_from_save(value) {
       deleteButton.addEventListener("click",deleteRow);
       doneButton.addEventListener("click",moove_to_done);
       editButton.addEventListener("click",editRow);
+      if(completed_flag)
+      {
+        doneButton.textContent = "החזר למשימות";
+        doneButton.addEventListener("click",moove_to_not_done);
+      }
       newCell.appendChild(editButton);
       newCell.appendChild(doneButton);
       newCell.appendChild(deleteButton);
@@ -190,15 +200,16 @@ function resetTableBody() {
   
   const FormData = localStorage.getItem("SaveForm.json");
   const Jason_data = JSON.parse(FormData);
-  let uncompleted_table = document.getElementById("completed-mission-list");
-  let i;
-  for(i =3; i <uncompleted_table.childNodes.length;i++)
+  let keys = Object.keys(Jason_data);
+  for(i =0; i <keys.length;i++)
   { 
-    console.log(uncompleted_table.childNodes[i]);
-    delete Jason_data[uncompleted_table.childNodes[i].childNodes[0].textContent];
-    uncompleted_table.removeChild(uncompleted_table.childNodes[i]);
+      if(Jason_data[keys[i]]["completed"] === true)
+      {
+        delete Jason_data[keys[i]];
+      }
   }
   localStorage.setItem("SaveForm.json",JSON.stringify(Jason_data));
+  updateFromSave();
 }
 //send a form to local data
 function send_form(event)
@@ -516,6 +527,29 @@ function deleteRow(event)
     updateFromSave();
 
 }
+//moove back to not done pile
+function moove_to_not_done(event)
+{
+  let current_row = document.getElementById(event.target.id).parentNode.parentNode;
+  let dest_table = document.getElementById("mission-list");  
+  if(current_row.parentNode.id === "filtered-mission-table-not-done")
+  {
+    let fillteredDoneTable = document.getElementById("filtered-mission-table");
+      fillteredDoneTable.appendChild(current_row.cloneNode(true));
+      let buttonCell = fillteredDoneTable.childNodes[fillteredDoneTable.childNodes.length-1].childNodes[5];
+      buttonCell.childNodes[0].addEventListener("click",editRow);
+      buttonCell.childNodes[1].textContent = "הושלם";
+      buttonCell.childNodes[1].addEventListener("click",moove_to_done);
+      buttonCell.childNodes[2].addEventListener("click",deleteRow);
+  }
+  dest_table.appendChild(current_row);
+  let jsonOfSave = localStorage.getItem("SaveForm.json");
+  let jason_data = JSON.parse(jsonOfSave);
+  jason_data[event.target.id]["completed"] = false;
+  let updatedJsonData = JSON.stringify(jason_data);
+  localStorage.setItem("SaveForm.json",updatedJsonData);
+  updateFromSave();
+}
 //moove the row to the  done pile
 function moove_to_done(event)
 {
@@ -527,6 +561,8 @@ function moove_to_done(event)
       fillteredDoneTable.appendChild(current_row.cloneNode(true));
       let buttonCell = fillteredDoneTable.childNodes[fillteredDoneTable.childNodes.length-1].childNodes[5];
       buttonCell.childNodes[0].addEventListener("click",editRow);
+      buttonCell.childNodes[1].textContent = "החזר למשימות";
+      buttonCell.childNodes[1].addEventListener("click",moove_to_not_done);
       buttonCell.childNodes[2].addEventListener("click",deleteRow);
   }
   dest_table.appendChild(current_row);
