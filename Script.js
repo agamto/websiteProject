@@ -744,6 +744,7 @@ function startDragging(clientX, clientY) {
   document.addEventListener('touchmove', onTouchMove, { passive: false });
   document.addEventListener('mouseup', onMouseUp);
   document.addEventListener('touchend', onTouchEnd);
+  document.addEventListener('touchmove', preventScrolling, { passive: false });
 }
 //while the drag function is being used
 function onMouseMove(event) {
@@ -778,6 +779,7 @@ function onMouseUp(event) {
     document.removeEventListener('touchmove', onTouchMove);
     document.removeEventListener('mouseup', onMouseUp);
     document.removeEventListener('touchend', onTouchEnd);
+    document.removeEventListener('touchmove',preventScrolling);
   }
 }
 //hendle the drop on change
@@ -821,7 +823,12 @@ function resetDragState() {
   draggedRow = null;
   isDragging = false;
 }
-
+//function that preventscrolling while dragging
+function preventScrolling(event) {
+  if (isDragging) {
+    event.preventDefault();
+  }
+}
 //creates the listeners
 function addListeners()
 {

@@ -357,6 +357,9 @@ h1 {
 
 .dragButton {
   cursor: move;
+  width: 100%;
+  height: 100%;
+  font-size: 20px;
 }
 .draggedRow {
   position: absolute;
