@@ -3,6 +3,11 @@ const importanceRunking = {"גבוהה":3,"בינונית":2,"נמוכה":1};
 let yesOrNo = false;
 let draggedRow = null;
 let isDragging = false;
+let initialOffsetX = 0;
+let initialOffsetY = 0;
+let animationElement = null;
+let theadHeight = 0;
+let current_table = null;
 function close_add_cattegories_form()
 {
   document.getElementById('add_cattegory_form').style.display = "none";
@@ -697,25 +702,50 @@ function functionFalse()
     yesOrNo  = false;
     hideAlert();
 }
+
 function onMouseDown(event) {
   if (event.target.classList.contains('dragButton')) {
     draggedRow = event.target.closest('tr');
     isDragging = true;
+    current_table = draggedRow.closest('table');
+    // Store the initial cursor position relative to the table
+    const tableBoundingRect = draggedRow.closest('table').getBoundingClientRect();
+    initialOffsetX = event.clientX - tableBoundingRect.left - draggedRow.offsetLeft;
+    initialOffsetY = event.clientY - tableBoundingRect.top - draggedRow.offsetTop;
+
+    // Get the height of the thead element
+    const thead = draggedRow.closest('table').querySelector('thead');
+    theadHeight = thead ? thead.offsetHeight : 0;
+
+    // Create an animation element
+    animationElement = document.createElement('div');
+    animationElement.className = 'animationElement';
+    document.body.appendChild(animationElement);
+
+    draggedRow.style.transition = 'none'; // Disable transition during dragging
+    draggedRow.style.zIndex = '9999'; // Ensure the dragged row is above other elements
+
+    // Attach the mousemove and mouseup event listeners to the document
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   }
 }
 
-  function onMouseMove(event) {
-    if (isDragging) {
-      event.preventDefault();
-    }
-  }
-
-
-function onMouseUp(event) {
-  if (isDragging) {
+function onMouseMove(event) {
+  if (isDragging ) {
     event.preventDefault();
-    const dropTarget = event.target.closest('tr');
-    if (dropTarget && dropTarget !== draggedRow) {
+
+    const mouseX = event.clientX - initialOffsetX;
+    const mouseY = event.clientY - initialOffsetY;
+    const thead = draggedRow.closest('table').querySelector('thead');
+    const theadHeight = thead ? thead.offsetHeight : 0;
+    const tbodyHeight = draggedRow.closest('tbody').offsetHeight;
+    const maxAllowedY = tbodyHeight - draggedRow.offsetHeight;
+    animationElement.style.transform = `translate(${mouseX}px, ${Math.max(theadHeight, Math.min(mouseY, maxAllowedY))}px)`;
+
+    const dropTarget = document.elementFromPoint(event.clientX, event.clientY).closest('tr');
+    const tbody = current_table.querySelector('tbody');
+    if (dropTarget && dropTarget !== draggedRow && tbody === dropTarget.closest('tbody')) {
       const newRowIndex = Array.from(dropTarget.parentNode.children).indexOf(dropTarget);
       const draggedRowIndex = Array.from(draggedRow.parentNode.children).indexOf(draggedRow);
       if (newRowIndex > draggedRowIndex) {
@@ -724,7 +754,25 @@ function onMouseUp(event) {
         dropTarget.parentNode.insertBefore(draggedRow, dropTarget);
       }
     }
+  }
+}
+
+function onMouseUp(event) {
+  if (isDragging) {
+    event.preventDefault();
+
+    document.body.removeChild(animationElement);
+    animationElement = null;
+
+    draggedRow.style.left = '';
+    draggedRow.style.top = '';
+    draggedRow.style.transition = '';
+    draggedRow.style.zIndex = '';
+    draggedRow.classList.remove("draggedRow");
+
     resetDragState();
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
   }
 }
 
