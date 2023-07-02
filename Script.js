@@ -134,8 +134,6 @@ function clear_Table(table)
 //add from save
 function add_from_save(value) {
   
-
-  
   let table;
   let completed_flag = false;
   if(value["completed"] === false)
@@ -195,6 +193,9 @@ function add_from_save(value) {
       mooveRowButton.addEventListener('mousedown', onMouseDown);
       mooveRowButton.addEventListener('mousemove', onMouseMove);
       mooveRowButton.addEventListener('mouseup', onMouseUp);
+      mooveRowButton.addEventListener('touchmove', onTouchMove);
+      mooveRowButton.addEventListener('touchend', onTouchEnd);
+      mooveRowButton.addEventListener('touchstart',onTouchStart);
       mooveRowButton.textContent="≡";
       mooveRowButton.classList.add("dragButton");
       MooveRowCell.appendChild(mooveRowButton);
@@ -705,30 +706,44 @@ function functionFalse()
 //activatate the drag start on the tr
 function onMouseDown(event) {
   if (event.target.classList.contains('dragButton')) {
-    draggedRow = event.target.closest('tr');
-    isDragging = true;
-    current_table = draggedRow.closest('table');
-    // Store the initial cursor position relative to the table
-    const tableBoundingRect = draggedRow.closest('table').getBoundingClientRect();
-    initialOffsetX = event.clientX - tableBoundingRect.left - draggedRow.offsetLeft;
-    initialOffsetY = event.clientY - tableBoundingRect.top - draggedRow.offsetTop;
+    event.preventDefault();
 
-    // Get the height of the thead element
-    const thead = draggedRow.closest('table').querySelector('thead');
-    theadHeight = thead ? thead.offsetHeight : 0;
-
-    // Create an animation element
-    animationElement = document.createElement('div');
-    animationElement.className = 'animationElement';
-    document.body.appendChild(animationElement);
-
-    draggedRow.style.transition = 'none'; // Disable transition during dragging
-    draggedRow.style.zIndex = '9999'; // Ensure the dragged row is above other elements
-
-    // Attach the mousemove and mouseup event listeners to the document
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    startDragging(event.clientX, event.clientY);
   }
+}
+//touch start moove
+function onTouchStart(event) {
+  if (event.target.classList.contains('dragButton') && event.touches.length === 1) {
+    event.preventDefault();
+
+    const touch = event.touches[0];
+    startDragging(touch.clientX, touch.clientY);
+  }
+}
+//the start dragging state
+function startDragging(clientX, clientY) {
+  draggedRow = event.target.closest('tr');
+  isDragging = true;
+  current_table = draggedRow.closest('table');
+
+  const tableBoundingRect = draggedRow.closest('table').getBoundingClientRect();
+  initialOffsetX = clientX - tableBoundingRect.left - draggedRow.offsetLeft;
+  initialOffsetY = clientY - tableBoundingRect.top - draggedRow.offsetTop;
+
+  const thead = draggedRow.closest('table').querySelector('thead');
+  theadHeight = thead ? thead.offsetHeight : 0;
+
+  animationElement = document.createElement('div');
+  animationElement.className = 'animationElement';
+  document.body.appendChild(animationElement);
+
+  draggedRow.style.transition = 'none';
+  draggedRow.style.zIndex = '9999';
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('touchmove', onTouchMove, { passive: false });
+  document.addEventListener('mouseup', onMouseUp);
+  document.addEventListener('touchend', onTouchEnd);
 }
 //while the drag function is being used
 function onMouseMove(event) {
@@ -737,23 +752,11 @@ function onMouseMove(event) {
 
     const mouseX = event.clientX - initialOffsetX;
     const mouseY = event.clientY - initialOffsetY;
-    const thead = draggedRow.closest('table').querySelector('thead');
-    const theadHeight = thead ? thead.offsetHeight : 0;
     const tbodyHeight = draggedRow.closest('tbody').offsetHeight;
     const maxAllowedY = tbodyHeight - draggedRow.offsetHeight;
     animationElement.style.transform = `translate(${mouseX}px, ${Math.max(theadHeight, Math.min(mouseY, maxAllowedY))}px)`;
 
-    const dropTarget = document.elementFromPoint(event.clientX, event.clientY).closest('tr');
-    const tbody = current_table.querySelector('tbody');
-    if (dropTarget && dropTarget !== draggedRow && tbody === dropTarget.closest('tbody')) {
-      const newRowIndex = Array.from(dropTarget.parentNode.children).indexOf(dropTarget);
-      const draggedRowIndex = Array.from(draggedRow.parentNode.children).indexOf(draggedRow);
-      if (newRowIndex > draggedRowIndex) {
-        dropTarget.parentNode.insertBefore(draggedRow, dropTarget.nextElementSibling);
-      } else {
-        dropTarget.parentNode.insertBefore(draggedRow, dropTarget);
-      }
-    }
+    handleDrop(event.clientX, event.clientY);
   }
 }
 //while droping the tr
@@ -772,7 +775,45 @@ function onMouseUp(event) {
 
     resetDragState();
     document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('touchmove', onTouchMove);
     document.removeEventListener('mouseup', onMouseUp);
+    document.removeEventListener('touchend', onTouchEnd);
+  }
+}
+//hendle the drop on change
+function handleDrop(clientX, clientY) {
+  const dropTarget = document.elementFromPoint(clientX, clientY).closest('tr');
+  const tbody = current_table.querySelector('tbody');
+  if (dropTarget && dropTarget !== draggedRow && tbody === dropTarget.closest('tbody')) {
+    const newRowIndex = Array.from(dropTarget.parentNode.children).indexOf(dropTarget);
+    const draggedRowIndex = Array.from(draggedRow.parentNode.children).indexOf(draggedRow);
+    if (newRowIndex > draggedRowIndex) {
+      dropTarget.parentNode.insertBefore(draggedRow, dropTarget.nextElementSibling);
+    } else {
+      dropTarget.parentNode.insertBefore(draggedRow, dropTarget);
+    }
+  }
+}
+//while you move in the touch phase
+function onTouchMove(event) {
+  if (isDragging && event.touches.length === 1) {
+    event.preventDefault();
+
+    const touch = event.touches[0];
+    const touchX = touch.clientX - initialOffsetX;
+    const touchY = touch.clientY - initialOffsetY;
+    const tbodyHeight = draggedRow.closest('tbody').offsetHeight;
+    const maxAllowedY = tbodyHeight - draggedRow.offsetHeight;
+    animationElement.style.transform = `translate(${touchX}px, ${Math.max(theadHeight, Math.min(touchY, maxAllowedY))}px)`;
+    
+    handleDrop(touch.clientX, touch.clientY);
+  }
+}
+//touch ending function
+function onTouchEnd(event) {
+  if (isDragging && event.touches.length === 0) {
+    event.preventDefault();
+    resetDragState();
   }
 }
 //reset the table to base status
