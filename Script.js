@@ -702,7 +702,7 @@ function functionFalse()
     yesOrNo  = false;
     hideAlert();
 }
-
+//activatate the drag start on the tr
 function onMouseDown(event) {
   if (event.target.classList.contains('dragButton')) {
     draggedRow = event.target.closest('tr');
@@ -730,7 +730,7 @@ function onMouseDown(event) {
     document.addEventListener('mouseup', onMouseUp);
   }
 }
-
+//while the drag function is being used
 function onMouseMove(event) {
   if (isDragging ) {
     event.preventDefault();
@@ -756,7 +756,7 @@ function onMouseMove(event) {
     }
   }
 }
-
+//while droping the tr
 function onMouseUp(event) {
   if (isDragging) {
     event.preventDefault();
@@ -775,7 +775,7 @@ function onMouseUp(event) {
     document.removeEventListener('mouseup', onMouseUp);
   }
 }
-
+//reset the table to base status
 function resetDragState() {
   draggedRow = null;
   isDragging = false;
