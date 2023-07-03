@@ -376,9 +376,9 @@ h1 {
 }
 #back_to_top_button {
   display: none;
-  position: fixed;
-  bottom: 20px;
-  right: 30px;
+  position: sticky;
+  bottom: 5%;
+  right: 5%;
   z-index: 99;
   border: none;
   cursor: pointer;
