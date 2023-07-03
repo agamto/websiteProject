@@ -829,9 +829,29 @@ function preventScrolling(event) {
     event.preventDefault();
   }
 }
+//function that will occur on scrolling showing the top button
+function onScrolling()
+{
+  if(document.body.scrollTop >20 ||document.documentElement.scrollTop > 20)
+  {
+    document.getElementById("back_to_top_button").style.display = "block";
+  }
+  else
+  {
+    document.getElementById("back_to_top_button").style.display = "none";
+  }
+}
+//returns to the top of the page
+function toTop()
+{
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
 //creates the listeners
 function addListeners()
 {
+    window.onscroll = function() {onScrolling()};
+    document.getElementById("back_to_top_button").addEventListener("click",toTop);
     document.getElementById('close_filtered_mission_table').addEventListener("click",close_filltered_table);
     document.getElementById('close-cattegory-form').addEventListener("click",close_add_cattegories_form);
     document.getElementById('open_cattegories_button').addEventListener("click",open_cattegories_form);
