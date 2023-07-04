@@ -13,6 +13,12 @@ h1 {
   margin: 0 auto;
   padding: 20px;
   text-align: right; /* Align text to the right */
+  @media (max-width: 600px) {
+    overflow-x: auto;
+    max-width: 100%; /* Take full width on mobile */
+    padding: 10px; /* Reduce padding on mobile */
+    text-align: center; /* Center align text on mobile */
+  }
 }
 
 .button-container {
@@ -156,7 +162,7 @@ h1 {
   border-radius: 4px;
   margin-bottom: 20px;
   margin-top: 20px;
-  width: 100%;
+  width: auto;
   display: inline-block;
 }
 #category-form-container input[type = "text"],
@@ -417,4 +423,10 @@ h1 {
   font-size: 16px;
   outline: none !important;
   text-align: center;
+}
+#filltered-mission-table-container
+{
+  background-color: #f2f2f2;
+  position: relative;
+  overflow-x: auto;
 }
