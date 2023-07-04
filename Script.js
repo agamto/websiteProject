@@ -143,6 +143,12 @@ function clear_Table(table)
   }
 
 }
+//sorting comparation
+function compareRows (rowA, rowB)  {
+  const importanceA = importanceRunking[rowA.childNodes[2].textContent];
+  const importanceB = importanceRunking[rowB.childNodes[2].textContent];
+  return importanceB-importanceA;
+}
 //add from save
 function add_from_save(value,key) {
   
@@ -157,18 +163,19 @@ function add_from_save(value,key) {
     table = document.getElementById("completed-mission-list");
     completed_flag = true;
   }
-  let placeForInsert = 0;
-  if(table.childNodes.length != 3)
-    for(let index = 3;index < table.childNodes.length;index++)
-    {
-      const currentNode = table.childNodes[index];
-      if(importanceRunking[currentNode.childNodes[2].textContent] < importanceRunking[value["imprtence"]])
-      {
-        placeForInsert = index-3;
-        break;
-      }
-      placeForInsert = index-2;
+    
+
+  const rows = Array.from(table.childNodes).slice(3);
+  rows.sort(compareRows);
+  let placeForInsert = rows.length;
+  for (let index = 0; index < rows.length; index++) {
+    const currentImportance = importanceRunking[rows[index].childNodes[2].textContent];
+    const targetImportance = importanceRunking[value["importance"]];
+    if (currentImportance < targetImportance) {
+      placeForInsert = index;
+      break;
     }
+  }
     let newRow = table.insertRow(placeForInsert);
     let  i;
     let keys = Object.keys(value);
@@ -798,9 +805,13 @@ function onMouseUp(event) {
 function handleDrop(clientX, clientY) {
   try
   {
+  
   const dropTarget = document.elementFromPoint(clientX, clientY).closest('tr');
   const tbody = current_table.querySelector('tbody');
+  const mainDragImportanceRunk = importanceRunking[draggedRow.childNodes[2].textContent];
   if (dropTarget && dropTarget !== draggedRow && tbody === dropTarget.closest('tbody')) {
+    let current_file = localStorage.getItem("SaveForm.json");
+    let jason_data = JSON.parse(current_file);
     const newRowIndex = Array.from(dropTarget.parentNode.children).indexOf(dropTarget);
     const draggedRowIndex = Array.from(draggedRow.parentNode.children).indexOf(draggedRow);
     if (newRowIndex > draggedRowIndex) {
@@ -808,6 +819,13 @@ function handleDrop(clientX, clientY) {
     } else {
       dropTarget.parentNode.insertBefore(draggedRow, dropTarget);
     }
+    const currentImportenceRating = dropTarget.childNodes[2].textContent;
+    if(mainDragImportanceRunk != importanceRunking[currentImportenceRating]);
+    {
+      draggedRow.childNodes[2].textContent = currentImportenceRating;
+      jason_data[draggedRow.childNodes[5].childNodes[0].id]["importance"] = currentImportenceRating;
+    }
+    localStorage.setItem("SaveForm.json",JSON.stringify(jason_data));
   }
   }
   catch(err)

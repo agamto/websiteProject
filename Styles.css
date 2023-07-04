@@ -403,9 +403,10 @@ h1 {
   display: inline-flex;
   position: relative;
   width: 100%;
-  height: 20%;
+  height: 10vh;
   background-color: #f2f2f2;
-
+  border: 4px solid #0000 ;
+ 
 }
 .topBar h4{
   position: relative;
