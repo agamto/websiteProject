@@ -749,6 +749,8 @@ function startDragging(clientX, clientY) {
 //while the drag function is being used
 function onMouseMove(event) {
   if (isDragging ) {
+    try
+    {
     event.preventDefault();
 
     const mouseX = event.clientX - initialOffsetX;
@@ -756,8 +758,11 @@ function onMouseMove(event) {
     const tbodyHeight = draggedRow.closest('tbody').offsetHeight;
     const maxAllowedY = tbodyHeight - draggedRow.offsetHeight;
     animationElement.style.transform = `translate(${mouseX}px, ${Math.max(theadHeight, Math.min(mouseY, maxAllowedY))}px)`;
-
+    
     handleDrop(event.clientX, event.clientY);
+    }
+    catch(err)
+    {}
   }
 }
 //while droping the tr
