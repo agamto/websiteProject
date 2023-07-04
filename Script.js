@@ -49,7 +49,7 @@ function updateFromSave()
   const keys_for_Save = Object.keys(Save_data_str);
   keys_for_Save.forEach(key =>
     {
-      add_from_save(Save_data_str[key]);
+      add_from_save(Save_data_str[key],key);
     });
     
 }
@@ -107,6 +107,12 @@ function create_table_of_filtered_users()
       filtered_Mission_Table.childNodes[i+3].childNodes[5].childNodes[0].addEventListener("click",editRow);
       filtered_Mission_Table.childNodes[i+3].childNodes[5].childNodes[1].addEventListener("click",moove_to_done);
       filtered_Mission_Table.childNodes[i+3].childNodes[5].childNodes[2].addEventListener("click",deleteRow);
+      filtered_Mission_Table.childNodes[i+3].childNodes[6].childNodes[0].addEventListener('mousedown', onMouseDown);
+      filtered_Mission_Table.childNodes[i+3].childNodes[6].childNodes[0].addEventListener('mousemove', onMouseMove);
+      filtered_Mission_Table.childNodes[i+3].childNodes[6].childNodes[0].addEventListener('mouseup', onMouseUp);
+      filtered_Mission_Table.childNodes[i+3].childNodes[6].childNodes[0].addEventListener('touchmove', onTouchMove);
+      filtered_Mission_Table.childNodes[i+3].childNodes[6].childNodes[0].addEventListener('touchend', onTouchEnd);
+      filtered_Mission_Table.childNodes[i+3].childNodes[6].childNodes[0].addEventListener('touchstart',onTouchStart);
     }
     var filtered_Mission_Table_not_done = document.getElementById('filtered-mission-table-not-done');
     clear_Table(filtered_Mission_Table_not_done);
@@ -119,6 +125,12 @@ function create_table_of_filtered_users()
       else
       filtered_Mission_Table_not_done.childNodes[i+3].childNodes[5].childNodes[1].addEventListener("click",moove_to_done);
       filtered_Mission_Table_not_done.childNodes[i+3].childNodes[5].childNodes[2].addEventListener("click",deleteRow);
+      filtered_Mission_Table_not_done.childNodes[i+3].childNodes[6].childNodes[0].addEventListener('mousedown', onMouseDown);
+      filtered_Mission_Table_not_done.childNodes[i+3].childNodes[6].childNodes[0].addEventListener('mousemove', onMouseMove);
+      filtered_Mission_Table_not_done.childNodes[i+3].childNodes[6].childNodes[0].addEventListener('mouseup', onMouseUp);
+      filtered_Mission_Table_not_done.childNodes[i+3].childNodes[6].childNodes[0].addEventListener('touchmove', onTouchMove);
+      filtered_Mission_Table_not_done.childNodes[i+3].childNodes[6].childNodes[0].addEventListener('touchend', onTouchEnd);
+      filtered_Mission_Table_not_done.childNodes[i+3].childNodes[6].childNodes[0].addEventListener('touchstart',onTouchStart);
     }
 
 }
@@ -132,7 +144,7 @@ function clear_Table(table)
 
 }
 //add from save
-function add_from_save(value) {
+function add_from_save(value,key) {
   
   let table;
   let completed_flag = false;
@@ -173,9 +185,9 @@ function add_from_save(value) {
       deleteButton.textContent = "מחק";
       editButton.textContent = "עריכה";
       doneButton.textContent = "הושלם";
-      deleteButton.id = value["name"];
-      editButton.id = value["name"];
-      doneButton.id = value["name"];
+      deleteButton.id = key;
+      editButton.id = key;
+      doneButton.id = key;
       deleteButton.addEventListener("click",deleteRow);
       doneButton.addEventListener("click",moove_to_done);
       editButton.addEventListener("click",editRow);
@@ -227,11 +239,6 @@ function send_form(event)
    const FormData = localStorage.getItem("SaveForm.json");
    const Jason_data = JSON.parse(FormData);
    let name= document.getElementById("mission-name").value;
-   if(Jason_data.hasOwnProperty(name))
-   {
-    alert("task already exist in current file");
-    return;
-   }
    let imprtence= document.getElementById("mission-importance").value;
    let notes= document.getElementById("mission-notes").value;
    let missionCattegory= document.getElementById("mission-category").value;
@@ -245,8 +252,7 @@ function send_form(event)
       missionCategory: missionCattegory,
       completed:false
     }
-
-    Jason_data[document.getElementById("mission-name").value] = data;
+    Jason_data[Object.keys(Jason_data).length] = data;
     const keyValueArray = Object.entries(Jason_data);
     keyValueArray.sort((a, b) => importanceRunking[b[1].importance]-importanceRunking[a[1].importance] );
     const updatedJsonData = JSON.stringify(Object.fromEntries(keyValueArray));
@@ -283,9 +289,9 @@ function send_form(event)
       deleteButton.textContent = "מחק";
       editButton.textContent = "עריכה";
       doneButton.textContent = "הושלם";
-      deleteButton.id = name;
-      editButton.id = name;
-      doneButton.id = name;
+      deleteButton.id = Object.keys(Jason_data).length;
+      editButton.id = Object.keys(Jason_data).length;
+      doneButton.id = Object.keys(Jason_data).length;
       deleteButton.addEventListener("click",deleteRow);
       doneButton.addEventListener("click",moove_to_done);
       editButton.addEventListener("click",editRow);
@@ -551,7 +557,7 @@ function moove_to_not_done(event)
   dest_table.appendChild(current_row);
   let jsonOfSave = localStorage.getItem("SaveForm.json");
   let jason_data = JSON.parse(jsonOfSave);
-  jason_data[event.target.id]["completed"] = false;
+  jason_data[parseInt(event.target.id)]["completed"] = false;
   let updatedJsonData = JSON.stringify(jason_data);
   localStorage.setItem("SaveForm.json",updatedJsonData);
   updateFromSave();
@@ -573,8 +579,9 @@ function moove_to_done(event)
   }
   dest_table.appendChild(current_row);
   let jsonOfSave = localStorage.getItem("SaveForm.json");
+  
   let jason_data = JSON.parse(jsonOfSave);
-  jason_data[event.target.id]["completed"] = true;
+  jason_data[parseInt(event.target.id)]["completed"] = true;
   let updatedJsonData = JSON.stringify(jason_data);
   localStorage.setItem("SaveForm.json",updatedJsonData);
   updateFromSave();
@@ -789,6 +796,8 @@ function onMouseUp(event) {
 }
 //hendle the drop on change
 function handleDrop(clientX, clientY) {
+  try
+  {
   const dropTarget = document.elementFromPoint(clientX, clientY).closest('tr');
   const tbody = current_table.querySelector('tbody');
   if (dropTarget && dropTarget !== draggedRow && tbody === dropTarget.closest('tbody')) {
@@ -799,6 +808,11 @@ function handleDrop(clientX, clientY) {
     } else {
       dropTarget.parentNode.insertBefore(draggedRow, dropTarget);
     }
+  }
+  }
+  catch(err)
+  {
+    
   }
 }
 //while you move in the touch phase
