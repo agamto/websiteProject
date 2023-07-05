@@ -96,7 +96,7 @@ h1 {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 20%;
   margin-right: 10px;
   outline: none !important; /* Add this line to remove the black border */
   margin-bottom: 5px; /* Add this line to add a small gap between buttons */
@@ -406,14 +406,16 @@ h1 {
   height: 10vh;
   background-color: #f2f2f2;
   border: 4px solid #0000 ;
- 
 }
 .topBar h4{
+  font-size:70%;
   position: relative;
-  right: 40%;
+  right: 30px;
 }
 .topBar button 
 {
+  position: relative;
+  
   width: 10%;
   border: none;
   cursor: pointer;
@@ -421,9 +423,34 @@ h1 {
   background-color: #4CAF50;
   color: white;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 70%;
   outline: none !important;
   text-align: center;
+  @media screen and (max-width: 600px) {
+    width: auto;
+   }
+}
+.BodyOfWelcomeDiv
+{
+  display: inline-flex;
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  background-color: #f2f2f2;
+  border: 4px solid #0000 ;
+  justify-content: center;
+  align-items: center;
+}
+.BodyOfWelcomeDiv h2
+{
+  width: fit-content;
+  height: fit-content;
+  font-size: 2.5vw;
+  position: absolute;
+  top:5%;
+  @media screen and (max-width: 500px) {
+    font-size: 7vw;
+   }
 }
 #filltered-mission-table-container
 {
