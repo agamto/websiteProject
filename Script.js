@@ -259,7 +259,16 @@ function send_form(event)
       missionCategory: missionCattegory,
       completed:false
     }
-    Jason_data[Object.keys(Jason_data).length] = data;
+    let key_max = 0;
+    const Save_File_Path = "SaveForm.json";
+    const Save_data = localStorage.getItem(Save_File_Path);
+    const Save_data_str = JSON.parse(Save_data);
+    const keys_for_Save = Object.keys(Save_data_str);
+    keys_for_Save.forEach(key =>
+      {
+        key_max = Math.max(Number(key),Number(key_max));
+      });
+    Jason_data[key_max+1] = data;
     const keyValueArray = Object.entries(Jason_data);
     keyValueArray.sort((a, b) => importanceRunking[b[1].importance]-importanceRunking[a[1].importance] );
     const updatedJsonData = JSON.stringify(Object.fromEntries(keyValueArray));
@@ -296,9 +305,9 @@ function send_form(event)
       deleteButton.textContent = "מחק";
       editButton.textContent = "עריכה";
       doneButton.textContent = "הושלם";
-      deleteButton.id = Object.keys(Jason_data).length;
-      editButton.id = Object.keys(Jason_data).length;
-      doneButton.id = Object.keys(Jason_data).length;
+      deleteButton.id = key_max+1;
+      editButton.id = key_max+1;
+      doneButton.id = key_max+1;
       deleteButton.addEventListener("click",deleteRow);
       doneButton.addEventListener("click",moove_to_done);
       editButton.addEventListener("click",editRow);
@@ -529,14 +538,14 @@ function deleteRow(event)
 {
     let current_row = document.getElementById(event.target.id).parentNode.parentNode;
     let table_to_delete = document.getElementById(event.target.id).parentNode.parentNode.parentNode;
-    let needToRemove = current_row.childNodes[0].textContent;
+    let needToRemove = event.target.id;
     let localget = localStorage.getItem("SaveForm.json");
     var local_text_json = JSON.parse(localget);
     let keys = Object.keys(local_text_json);
     for(let  i =0 ;i  <keys.length;i++)
     {
       
-      if(local_text_json[keys[i]]["name"] === needToRemove)
+      if(keys[i] === needToRemove)
       {
         delete local_text_json[keys[i]];
       }
