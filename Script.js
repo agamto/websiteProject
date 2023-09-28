@@ -343,23 +343,7 @@ function SaveEdit(event)
 {
   let current_row = document.getElementById(event.target.id).parentNode.parentNode;
   let id = current_row.childNodes[5].childNodes[0].id;
-  while(true)
-  {
-  
-  if(importanceRunking.hasOwnProperty(current_row.childNodes[2].textContent)&& categories.has(current_row.childNodes[4].textContent))
-    {
-    break;
-    }
-  else
-    {
-      if(!importanceRunking.hasOwnProperty(current_row.childNodes[2].textContent))
-    alert("צריך לבחור בין:גבוהה,נמוכה,בינונית");
-    else{
-      alert("category not in list");
-    }
-    return;  
-    }
-  }
+  current_row.childNodes[2].textContent = current_row.childNodes[2].childNodes[0].value;
   let table = document.getElementById(event.target.id).parentNode.parentNode.parentNode;
   let placeForInsert = 0;
   let i;
@@ -400,7 +384,6 @@ function SaveEdit(event)
   const updatedJsonData = JSON.stringify(Jason_data);
   localStorage.setItem("SaveForm.json",updatedJsonData);
   updateFromSave();
-
 }
 // make the rows editable
 function editRow(event)
@@ -409,8 +392,24 @@ function editRow(event)
   let i;
   for(i= 0; i < current_row.childNodes.length-2;i++)
   {
-    current_row.childNodes[i].setAttribute("contenteditable", "true");
+    if(i!= 2)
+      current_row.childNodes[i].setAttribute("contenteditable", "true");
   }
+  let selectCell = document.createElement("select");
+  let high = document.createElement("option");
+  let medium = document.createElement("option");
+  let low = document.createElement("option");
+  low.value = "נמוכה";
+  low.innerText = "נמוכה"
+  medium.value = "בינונית";
+  medium.innerText ="בינונית";
+  high.value = "גבוהה";
+  high.innerText = "גבוהה";
+  selectCell.appendChild(low);
+  selectCell.appendChild(medium);
+  selectCell.appendChild(high);
+  current_row.childNodes[2].innerText = "";
+  current_row.childNodes[2].appendChild(selectCell);
   document.getElementById(event.target.id).removeEventListener("click",editRow);
   let SaveButton  = document.createElement("button");
   SaveButton.textContent = "שמור";
@@ -912,6 +911,5 @@ function addListeners()
 function init() {
  create_file_if_not_exist();
  addListeners();
- 
 }
 init();
